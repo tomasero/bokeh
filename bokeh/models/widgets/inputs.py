@@ -23,6 +23,7 @@ from ...core.enums import CalendarPosition
 from ...core.has_props import abstract
 from ...core.properties import (
     Bool,
+    Color,
     ColorHex,
     Date,
     Dict,
@@ -414,18 +415,18 @@ class DatePicker(InputWidget):
     Whether the calendar sholud be displayed inline.
     """)
 
-class ColorPicker(InputWidget):
-    ''' Color picker widget
 
-    .. warning::
-        This widget as a limited support on *Internet Explorer* (it will be displayed
-        as a simple text input).
+class ColorPicker(InputWidget):
+    ''' Color picker widget.
 
     '''
 
     color = ColorHex(default='#000000', help="""
     The initial color of the picked color (named or hexadecimal)
     """)
+
+    color_throttled = Color()
+
 
 #-----------------------------------------------------------------------------
 # Private API

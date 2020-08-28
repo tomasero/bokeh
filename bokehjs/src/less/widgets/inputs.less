@@ -133,4 +133,114 @@
       }
     }
   }
+
+  .bk-color-picker-input {
+    background-clip: content-box;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  .bk-color-picker-ctn {
+    z-index: 100;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: gainsboro;
+    display: flex;
+    position: relative;
+    padding: 6px 2px 8px 2px;
+    height: 200px;
+    width: 250px;
+
+
+    .bk-gradient-pnl {
+      /*used for saturation and Lightness values*/
+      box-sizing: content-box;
+      height: 100%;
+      border: 1px solid black;
+      background: red;
+      cursor: crosshair;
+      flex-grow: 1;
+      width: 0; //avoid container being resized when cursor hit right border
+
+      .bk-gradient-pnl-overlay-1 {
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          hsl(0, 0%, 50%) 0%,
+          hsla(0, 0%, 50%, 0) 100%
+        );
+
+        .bk-gradient-pnl-overlay-2 {
+          height: 100%;
+          background: linear-gradient(
+            to bottom,
+            hsl(0, 0%, 100%) 0%,
+            hsla(0, 0%, 100%, 0) 50%,
+            hsla(0, 0%, 0%, 0) 50%,
+            hsl(0, 0%, 0%) 100%
+          );
+          overflow: hidden;
+
+          .bk-gradient-pnl-cursor-outer {
+            position: relative;
+            width: 11px;
+            height: 11px;
+            border: 2px solid black;
+            border-radius: 50%;
+
+            .bk-gradient-pnl-cursor-inner {
+              width: 11px;
+              height: 11px;
+              border: 2px solid white;
+              border-radius: 50%;
+              box-sizing: border-box;
+            }
+          }
+        }
+      }
+    }
+
+    .bk-hue-sld-ctn {
+      margin-left: 4px;
+      display: flex;
+      width: 36px;
+      height: 100%;
+      cursor: n-resize;
+
+      .bk-hue-sld-bar {
+        box-sizing: content-box;
+        border: 1px solid #aaa;
+        width: 20px;
+        height: 100%;
+        background: linear-gradient(
+          to top,
+          #f00 0%,
+          #ff0 16.66%,
+          #0f0 33.33%,
+          #0ff 50%,
+          #00f 66.66%,
+          #f0f 83.33%,
+          #f00 100%
+        );
+      }
+
+      .bk-hue-sld-larr {
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 7px solid #858585;
+        margin-top: -5px;
+      }
+
+      .bk-hue-sld-rarr {
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-right: 7px solid #858585;
+        margin-top: -5px;
+      }
+    }
+  }
 }
