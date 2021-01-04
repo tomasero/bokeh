@@ -94,16 +94,16 @@ export class CategoricalAxisView extends AxisView {
 
     if (range.levels == 1) {
       const major = ticks.major as L1Factor[]
-      const labels = this.model.formatter.doFormat(major, this)
+      const labels = this.formatter_view.format(major)
       info.push([labels, coords.major, this.model.major_label_orientation, this.visuals.major_label_text])
     } else if (range.levels == 2) {
       const major = (ticks.major as L2Factor[]).map((x) => x[1])
-      const labels = this.model.formatter.doFormat(major, this)
+      const labels = this.formatter_view.format(major)
       info.push([labels, coords.major, this.model.major_label_orientation, this.visuals.major_label_text])
       info.push([ticks.tops as string[], coords.tops, this.model.group_label_orientation, this.visuals.group_text])
     } else if (range.levels == 3) {
       const major = (ticks.major as L3Factor[]).map((x) => x[2])
-      const labels = this.model.formatter.doFormat(major, this)
+      const labels = this.formatter_view.format(major)
       const mid_labels = ticks.mids.map((x) => x[1])
       info.push([labels, coords.major, this.model.major_label_orientation, this.visuals.major_label_text])
       info.push([mid_labels as string[], coords.mids, this.model.subgroup_label_orientation, this.visuals.subgroup_text])

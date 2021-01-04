@@ -1,43 +1,32 @@
-import {TickFormatter} from "./tick_formatter"
-import {BasicTickFormatter} from "./basic_tick_formatter"
+import {TickFormatter, TickFormatterView} from "./tick_formatter"
+import {BasicTickFormatter, BasicTickFormatterView} from "./basic_tick_formatter"
 import {LogTicker} from "../tickers/log_ticker"
+import type {LogAxisView} from "../axes/log_axis"
+import {build_view} from "core/build_views"
 import * as p from "core/properties"
 
-export namespace LogTickFormatter {
-  export type Attrs = p.AttrsOf<Props>
-
-  export type Props = TickFormatter.Props & {
-    ticker: p.Property<LogTicker | null>
-  }
-}
-
-export interface LogTickFormatter extends LogTickFormatter.Attrs {}
-
-export class LogTickFormatter extends TickFormatter {
-  properties: LogTickFormatter.Props
-
-  constructor(attrs?: Partial<LogTickFormatter.Attrs>) {
-    super(attrs)
-  }
-
-  static init_LogTickFormatter(): void {
-    this.define<LogTickFormatter.Props>(({Ref, Nullable}) => ({
-      ticker: [ Nullable(Ref(LogTicker)), null ],
-    }))
-  }
+export class LogTickFormatterView extends TickFormatterView {
+  model: LogTickFormatter
+  parent: LogAxisView
 
   protected basic_formatter: BasicTickFormatter
+  protected basic_formatter_view: BasicTickFormatterView
 
   initialize(): void {
     super.initialize()
     this.basic_formatter = new BasicTickFormatter()
   }
 
-  doFormat(ticks: number[], opts: {loc: number}): string[] {
+  async lazy_initialize(): Promise<void> {
+    await super.lazy_initialize()
+    this.basic_formatter_view = await build_view(this.basic_formatter, {parent: this.parent})
+  }
+
+  format(ticks: number[]): string[] {
     if (ticks.length == 0)
       return []
 
-    const base = this.ticker != null ? this.ticker.base : 10
+    const {base} = this.parent.model.ticker
 
     let small_interval = false
     const labels: string[] = new Array(ticks.length)
@@ -50,8 +39,37 @@ export class LogTickFormatter extends TickFormatter {
     }
 
     if (small_interval)
-      return this.basic_formatter.doFormat(ticks, opts)
+      return this.basic_formatter_view.format(ticks)
     else
       return labels
+  }
+}
+
+export namespace LogTickFormatter {
+  export type Attrs = p.AttrsOf<Props>
+
+  export type Props = TickFormatter.Props & {
+    /** @deprecated */
+    ticker: p.Property<LogTicker | null>
+  }
+}
+
+export interface LogTickFormatter extends LogTickFormatter.Attrs {}
+
+export class LogTickFormatter extends TickFormatter {
+  properties: LogTickFormatter.Props
+  __view_type__: LogTickFormatterView
+
+  constructor(attrs?: Partial<LogTickFormatter.Attrs>) {
+    super(attrs)
+  }
+
+  static init_LogTickFormatter(): void {
+    this.prototype.default_view = LogTickFormatterView
+
+    this.define<LogTickFormatter.Props>(({Ref, Nullable}) => ({
+      /** @deprecated */
+      ticker: [ Nullable(Ref(LogTicker)), null ],
+    }))
   }
 }
